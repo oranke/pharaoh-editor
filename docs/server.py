@@ -1,7 +1,9 @@
-# wasm 호스팅용 간단서버. 
+#-*- coding: utf-8 -*-
+#wasm 호스팅용 간단서버. 
 
 import SimpleHTTPServer
 import SocketServer
+
 
 PORT = 8088
 

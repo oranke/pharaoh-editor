@@ -14,13 +14,129 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     -->
+
+
+</head>
+
+<body>
+    <div id="page-wrapper">
+        <header id="main-header">
+             <!-- 여긴 헤더야!! 아하하!! -->
+            <hgroup>
+                <h2>Pharaoh puzzle editor</h2>
+                <!--
+                <h2 class="master-description">오랑캐꽃</h2>
+                -->
+                <div id='spinner'></div>
+                <div id="status">Downloading...</div>
+                <progress value="0" max="100" id="progress" hidden=1></progress>
+            </hgroup>
+        </header>
+
+        <div id="main-content">
+            <!-- 여기가 본문 -->
+
+            <div id="buttons-area">
+                <!--
+                버튼영역이야! <br>
+                블럭 추가 <br>
+                -->
+                <hr class="seperator">
+
+                <label for="rd-play" class="full-rd">Play</label> 
+                <input class="rb" type="radio" name="plate-work" id="rd-play"> <br>
+
+                <label for="rd-PH" class="half-rd">PH</label> 
+                <input class="rb" type="radio" name="plate-work" id="rd-PH"> <br>
+                <label for="rd-V2" class="half-rd">V2</label>
+                <input class="rb" type="radio" name="plate-work" id="rd-V2">
+                <label for="rd-V3" class="half-rd">V3</label>
+                <input class="rb" type="radio" name="plate-work" id="rd-V3">                
+                <label for="rd-H2" class="half-rd">H2</label>
+                <input class="rb" type="radio" name="plate-work" id="rd-H2">                
+                <label for="rd-H3" class="half-rd">H3</label>
+                <input class="rb" type="radio" name="plate-work" id="rd-H3"> <br> 
+
+                <label for="rd-delete" class="full-rd">Delete</label>
+                <input class="rb" type="radio" name="plate-work" id="rd-delete"> <br> 
+
+
+                <hr class="seperator">
+                <button id="export" class="full-btn">Export</button>
+                <button id="import" class="full-btn">Import</button>
+
+                <hr class="seperator">
+                <button id="solve" class="full-btn">Solve</button> <br>
+                <button id="findfar" class="full-btn">Find Far</button> <br>
+
+                <hr class="seperator">
+                <button id="test" class="full-btn">Test</button>
+                <hr class="seperator">
+                
+            </div>
+
+            <div id="view-area">
+                <!--
+                표시영역이다!
+                -->
+                <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+                <div id="lbl-level">Level 0</div>
+                <div id="lbl-moves">Moves 0</div>
+
+                <!-- 게임 UI 블럭 판넬-->
+                <div id="game-overay-panel" class="hidden"></div>
+            </div>
+        
+
+        </div>
+    
+
+    <!--
+        <footer id = "main-footer">
+            <a href="#">created by oranke!</a>
+        </footer>
+    -->
+
+    </div>
+
+
+
+    <div id="popup-dialog" class="hidden titleless_dlg" title="">
+        <br>
+        <p>
+            <b id="popup-message">Let me think...</b>
+        </p>
+    </div>
+
+    <div id="export-dialog" class="hidden" title="Export block string">
+        <p>
+        </p>
+        <p>
+            <input type="text" id="export-text" style="width:100%" readonly>
+        </p>
+    </div>
+
+    <div id="import-dialog" class="hidden" title="Import block string">
+        <p>
+        </p>
+        <p>
+            <input type="text" id="import-text" style="width:100%">
+        </p>
+    </div>
+
+
+
+    <!-- 전체 UI 블럭 판넬-->
+    <div id="full-overay-panel" class="hidden"></div>
+
+
     <script src="jquery-ui/jquery-3.3.1.min.js"></script>
-    <script src="jquery-ui/jquery-ui.js"></script>
+    <script src="jquery-ui/jquery-ui.min.js"></script>
 
     <script type='text/javascript'>
         // UI 제어 부분.
 
-        $( function() {
+        //$( function() {
             // 라디오버튼 초기화
             //$("input").checkboxradio({
             $(".rb").checkboxradio({                
@@ -61,25 +177,18 @@
 
                 //console.log('ahaha')
             });
+
             // play 버튼은 누른 채 시작. 
             // https://stackoverflow.com/questions/3759088/jquery-ui-radio-button-how-to-correctly-switch-checked-state
             $("#rd-play").prop('checked', true).button("refresh");
 
-            function doProcMove() {
-                //console.log('procMove');
-
-                if (Module.proc_Count() > 1) {
-                    Module.proc_Move(); 
-
-                    setTimeout(doProcMove, 500);
-
-                } else {
-                    $("#full-overay-panel").addClass('hidden');
-                }
-            }
+            var popup_funcs = {
+                onShow: null,
+                onClose: null
+            };
 
             // 풀이 다이얼로그 
-            $("#solve-dialog" ).dialog({
+            $("#popup-dialog").dialog({
                 autoOpen: false,
                 modal: true,
                 closeOnEscape: false,
@@ -88,19 +197,6 @@
                 draggable: false,
                 resizable: false,
 
-                /*
-                //dialogClass: "no-titlebar",
-                show: {
-                    //effect: "blind",
-                    effect: "fade",
-                    duration: 300
-                },
-                hide: {
-                    //effect: "explode",
-                    effect: "fade",
-                    duration: 300
-                },
-                */
                 show: "fade",
                 hide: "fade",
 
@@ -108,82 +204,83 @@
                     $(".ui-dialog-titlebar").hide();
                     $('.ui-widget-overlay').hide().fadeIn();
 
-                    // 바로 닫히면 없어보이니 500ms 후에 풀기 시작. 
+                    // 바로 닫히면 없어보이니 적당시간 후에 처리 시작. 
                     setTimeout(function() {
-                        var ret = Module.proc_Solve();
-                        //console.log(ret); 
-                        
-                        $("#solve-dialog").dialog('close');
+                        if (popup_funcs.onShow) popup_funcs.onShow(); 
 
-                        // 화면 전체 블럭. 
-                        $("#full-overay-panel").removeClass('hidden');
-                        $("#full-overay-panel").focus()
+                        $("#popup-dialog").dialog('close');
 
+                    }, 700);
 
-                    }, 500);
-
-
-
-                    /*
-                    //setTimeout("$('#dialog-message').dialog('close')",3000);
-                    setTimeout(function () {
-                        $("#solve-dialog").dialog('close');
-
-
-                        // 1초간 UI 막기 테스트. 
-                        $("#full-overay-panel").removeClass('hidden').focus();
-                        setTimeout(function () {
-                            $("#full-overay-panel").addClass('hidden');
-
-                        }, 1000);
-
-                    }, 1500);
-                    */
                 },
                 
                 beforeClose: function(event, ui) {
                     // modal 옵션을 꺼서 오버레이가 닫히지 않게 하고
-                    $("#solve-dialog").dialog('option', 'modal', false);
+                    $("#popup-dialog").dialog('option', 'modal', false);
                     $(document).off( 'focusin' ).off( 'focusin' );
                     // 오버레이에 직접 페이드아웃을 건다
                     $('.ui-widget-overlay').fadeOut(function () {
                         //console.log('fade out');
                         // 다이얼로그 정리에 준하는 처리를 해준다. 
-                        $("#solve-dialog").dialog('option', 'modal', true);
+                        $("#popup-dialog").dialog('option', 'modal', true);
                         $('.ui-widget-overlay').remove();
                         $(document).removeData( "ui-dialog-overlays");
-                        // var overlays = $(document).data( "ui-dialog-overlays" ) - 1;
-                        // if ( !overlays ) {
-                        //     $(document).removeData( "ui-dialog-overlays")
-                        //     //$(document).off( 'focusin' ).off( 'focusin' );
-                        // } else {
-                        //     $(document).data( "ui-dialog-overlays", overlays );
-                        // }
                     }); 
 
                 },
 
                 close: function(event, ui) {
-                    // 닫히고 100ms 후에 이동 시작. 
-                    setTimeout(function() {
-                        doProcMove();
-                    }, 100);
+                    if (popup_funcs.onClose) popup_funcs.onClose(); 
                 }
 
-                /*
-                buttons: {
-                    Ok: function() {
-                    $( this ).dialog( "close" );
-                    }
-                }
-                */
             });            
             
+            function doSolveMove() {
+                if (Module.proc_Count() > 1) {
+                    Module.proc_Move(); 
+
+                    setTimeout(doSolveMove, 500);
+
+                } else {
+                    $("#full-overay-panel").addClass('hidden');
+                }
+            }
+
             // 풀이버튼 동작
             $("#solve").button().click(function() {
                 $(".ui-dialog-titlebar").hide();
-                $("#solve-dialog" ).dialog('open'); 
+                $("#popup-message").text('Let me think...')
+
+                // 팝업 표시 후 처리
+                popup_funcs.onShow = function () {
+                    var ret = Module.proc_Solve();
+                    //console.log(ret); 
+
+                    // 화면 전체 블럭. 
+                    $("#full-overay-panel").removeClass('hidden');
+                    $("#full-overay-panel").focus()
+                }
+
+                // 팝업 종료 후 처리
+                popup_funcs.onClose = function () {
+                    // 닫히고 100ms 후에 이동 시작. 
+                    setTimeout(function() {
+                        doSolveMove();
+                    }, 100);
+
+                }
+                
+                $("#popup-dialog").dialog('open'); 
             }); 
+
+            // 가장 먼 거리 찾기 
+            $("#findfar").button().click(function () {
+                $(".ui-dialog-titlebar").hide();
+                $("#popup-message").text('Not yet...');
+                popup_funcs.onShow = null; 
+                popup_funcs.onClose = null; 
+                $("#popup-dialog").dialog('open'); 
+            })
 
             // 출력 다이얼로그 
             $("#export-dialog" ).dialog({
@@ -301,137 +398,40 @@
             });
 
 
+
             // 테스트 버튼 동작
             $("#test").button().click(function() {
                 //alert ('test');
                 //document.getElementById('canvas').setAttribute("style","width:600px");
-                //Module.testQuaker();
+                Module.testQuaker();
                 //console.log(Module.export_Blocks());
                 //Module.testFunc("hahaha");
 
-                Module.goto_NextLevel(); 
+
+
             });
 
+            // 레벨 완료시 동작
+            function proc_LevelComplete() {
+                $(".ui-dialog-titlebar").hide();
+                $("#popup-message").text('Congraturations!!')
+
+                // 팝업 표시 후 처리
+                popup_funcs.onShow = function () {
+                    Module.goto_NextLevel(); 
+                }
+
+                // 팝업 종료 후 처리
+                popup_funcs.onClose = null
+                
+                $("#popup-dialog").dialog('open'); 
+            }             
             /*
             */
-        } );
+        //} );
+
+       
     </script>
-
-</head>
-
-<body>
-    <div id="page-wrapper">
-        <header id="main-header">
-             <!-- 여긴 헤더야!! 아하하!! -->
-            <hgroup>
-                <h2>Pharaoh puzzle editor</h2>
-                <!--
-                <h2 class="master-description">오랑캐꽃</h2>
-                -->
-                <div id='spinner'></div>
-                <div id="status">Downloading...</div>
-                <progress value="0" max="100" id="progress" hidden=1></progress>
-            </hgroup>
-        </header>
-
-        <div id="main-content">
-            <!-- 여기가 본문 -->
-
-            <div id="buttons-area">
-                <!--
-                버튼영역이야! <br>
-                블럭 추가 <br>
-                -->
-                <hr class="seperator">
-
-                <label for="rd-play" class="full-rd">Play</label> 
-                <input class="rb" type="radio" name="plate-work" id="rd-play"> <br>
-
-                <label for="rd-PH" class="half-rd">PH</label> 
-                <input class="rb" type="radio" name="plate-work" id="rd-PH"> <br>
-                <label for="rd-V2" class="half-rd">V2</label>
-                <input class="rb" type="radio" name="plate-work" id="rd-V2">
-                <label for="rd-V3" class="half-rd">V3</label>
-                <input class="rb" type="radio" name="plate-work" id="rd-V3">                
-                <label for="rd-H2" class="half-rd">H2</label>
-                <input class="rb" type="radio" name="plate-work" id="rd-H2">                
-                <label for="rd-H3" class="half-rd">H3</label>
-                <input class="rb" type="radio" name="plate-work" id="rd-H3"> <br> 
-
-                <label for="rd-delete" class="full-rd">Delete</label>
-                <input class="rb" type="radio" name="plate-work" id="rd-delete"> <br> 
-
-                <hr class="seperator">
-                <button id="solve" class="full-btn">Solve</button> <br>
-
-                <hr class="seperator">
-                <button id="export" class="full-btn">Export</button>
-                <button id="import" class="full-btn">Import</button>
-
-                <hr class="seperator">
-                <button id="test" class="full-btn">Test</button>
-                <hr class="seperator">
-                
-            </div>
-
-            <div id="view-area">
-                <!--
-                표시영역이다!
-                -->
-                <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
-                <div id="lbl-level">Level 0</div>
-                <div id="lbl-moves">Moves 0</div>
-
-                <!-- 게임 UI 블럭 판넬-->
-                <div id="game-overay-panel" class="hidden"></div>
-            </div>
-        
-
-        </div>
-    
-
-    <!--
-        <footer id = "main-footer">
-            <a href="#">created by oranke!</a>
-        </footer>
-    -->
-
-    </div>
-
-
-
-    <div id="solve-dialog" class="hidden titleless_dlg" title="">
-        <br>
-        <p>
-        <!--
-          <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-        -->
-        <b>Let me think...</b>
-        </p>
-    </div>
-
-    <div id="export-dialog" class="hidden" title="Export block string">
-        <p>
-        </p>
-        <p>
-            <input type="text" id="export-text" style="width:100%" readonly>
-        </p>
-    </div>
-
-    <div id="import-dialog" class="hidden" title="Import block string">
-        <p>
-        </p>
-        <p>
-            <input type="text" id="import-text" style="width:100%">
-        </p>
-    </div>
-
-
-
-    <!-- 전체 UI 블럭 판넬-->
-    <div id="full-overay-panel" class="hidden"></div>
-
-
 
     <script type='text/javascript'>
         // emscripten 제어부. 
@@ -536,6 +536,10 @@
             //lblLevel
             lblLevel.innerHTML = 'Level ' + level; 
 
+        },
+        doLevelComplete: function() {
+            // /console.log("scr Level complete")
+            proc_LevelComplete(); 
         }
         };
         Module.setStatus('Downloading...');

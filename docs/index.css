@@ -96,10 +96,12 @@ body {
     height: 100%;
     margin: 0px, 0px;
     padding: 0px 5px; 
+    overflow-x: scroll;
     overflow-y: scroll; 
     line-height: 2.5em; 
     background: rgb(216, 228, 255); 
     /*
+    padding-right: 17px;
     background: rgb(216, 228, 255); 
     */
 }
