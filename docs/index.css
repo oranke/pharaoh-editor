@@ -38,7 +38,7 @@ li { list-style: none; }
 
 #page-wrapper, #main-header, #main-content, #main-footer, 
 #buttons-area, #view-area, #full-overay-panel, #game-overay-panel,
-#lbl-level, #lbl-moves {
+#lbl-level, #lbl-moves, #status-div {
     position: absolute;
     /*
     overflow: hidden; 
@@ -84,7 +84,7 @@ body {
     background: #414B55; 
     /*height: 85%;*/
     /*height: 85%; */
-    margin: 20px 20px; 
+    margin: 10px 10px; 
     padding: 10px 20px; 
     border-radius: 5px; 
     box-shadow: 0 2px 5px rgba(100, 100, 100, 0.3); 
@@ -96,10 +96,10 @@ body {
 #main-header {
     color: white; 
     margin: 5px 10px;
-    padding: 10px 10px; 
+    padding: 0px 10px; 
     left: 0; right: 0;
-    height: 45px;
-    text-shadow: 0 0 3px black, 0 0 5px black;
+    height: 40px;
+    text-shadow: 0 0 5px black, 0 0 15px black;
 
     /*
     border: 1px solid blue; 
@@ -121,7 +121,7 @@ body {
 #main-content {
     margin: 7px 20px;
     left: 0; right: 0; 
-    top: 70px; bottom: 10px; 
+    top: 50px; bottom: 10px; 
     /*
     border: 1px solid red; 
     */
@@ -154,6 +154,8 @@ body {
     width: 150px; 
 }
 
+
+
 #view-area {
     left: 180px; 
     right: 0px; 
@@ -184,18 +186,28 @@ body {
     color: white;
     left: 0.5em;
     top: 0.5em;
-    text-shadow: 0 0 3px black, 0 0 5px black;
+    text-shadow: 0 0 5px black, 0 0 8px black;
     pointer-events: none;
+    font-weight: bold;
 }
 
 #lbl-moves {
     color: white;
     left: 0.5em;
     top: 2em;
-    text-shadow: 0 0 3px black, 0 0 5px black;
+    text-shadow: 0 0 5px black, 0 0 8px black;
     pointer-events: none;
+    font-weight: bold;
 }
 
+#status-div {
+    color: white;
+    left : 0.5em;
+    bottom: 0.5em; 
+    text-shadow: 0 0 5px black, 0 0 8px black;
+    pointer-events: none;
+    font-weight: bold;
+}
 
 /* 5. 바닥글 */
 #main-footer {

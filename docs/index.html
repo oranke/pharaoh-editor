@@ -27,9 +27,6 @@
                 <!--
                 <h2 class="master-description">오랑캐꽃</h2>
                 -->
-                <div id='spinner'></div>
-                <div id="status">Downloading...</div>
-                <progress value="0" max="100" id="progress" hidden=1></progress>
             </hgroup>
         </header>
 
@@ -83,6 +80,11 @@
                 <div id="lbl-level">Level 0</div>
                 <div id="lbl-moves">Moves 0</div>
 
+                <div id="status-div">
+                    <div id='spinner'></div>
+                    <div id="status">Downloading...</div>
+                    <progress value="0" max="100" id="progress" hidden=1></progress>
+                </div>
                 <!-- 게임 UI 블럭 판넬-->
                 <div id="game-overay-panel" class="hidden"></div>
             </div>
@@ -238,11 +240,13 @@
             function doSolveMove() {
                 if (Module.proc_Count() > 1) {
                     Module.proc_Move(); 
+                    Module.setStatus('Step to solution ' + Module.proc_Count());
 
                     setTimeout(doSolveMove, 500);
 
                 } else {
                     $("#full-overay-panel").addClass('hidden');
+                    Module.setStatus('');
                 }
             }
 
