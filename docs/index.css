@@ -3,8 +3,34 @@
     margin: 0; padding: 0;
     /*
     font-family: '맑은 고딕', 'Malgun Gothic', Gothic, sans-serif; 
+
+#1D99FC    
+#647E97
+#555F69
+#67727D
+#414B55
+#38424A
     */
 }
+
+
+::-webkit-scrollbar {
+    width: .5em;
+    height: .5em
+}
+::-webkit-scrollbar-button {
+    background: #555F69;
+    height: 0px;
+}
+::-webkit-scrollbar-track-piece {
+    background: #414B55;
+}
+::-webkit-scrollbar-thumb {
+    background: #555F69;
+    border-radius: 3px; 
+}​
+
+
 a { text-decoration: none; }
 li { list-style: none; }
 
@@ -52,10 +78,10 @@ body {
     width: 960px; 
     /*height: 100vh; */
     margin: 0 auto; 
-    background: #E6E6E6;
+    background: rgb(33, 39, 44);
 }
 #page-wrapper {
-    background: white; 
+    background: #414B55; 
     /*height: 85%;*/
     /*height: 85%; */
     margin: 20px 20px; 
@@ -68,10 +94,13 @@ body {
 
 /* 3. 헤더 구성 */
 #main-header {
+    color: white; 
     margin: 5px 10px;
     padding: 10px 10px; 
     left: 0; right: 0;
     height: 45px;
+    text-shadow: 0 0 3px black, 0 0 5px black;
+
     /*
     border: 1px solid blue; 
     */
@@ -79,12 +108,12 @@ body {
 
 #main-header.h1 {
     font-size: 30px;
-    color: #181818; 
+    color: white; 
 }
 
 #main-header.h2 {
     font-size: 15px; font-weight: 500; 
-    color: #383838;
+    color: white;
 }
 
 /* 4. 본문영역 */
@@ -103,16 +132,27 @@ body {
     height: 100%;
     margin: 0px, 0px;
     padding: 0px 5px; 
-    overflow-x: scroll;
     overflow-y: scroll; 
     line-height: 2.5em; 
-    background: rgb(216, 228, 255); 
     /*
     padding-right: 17px;
+    background: #67727D; 
+    overflow-x: scroll;
     background: rgb(216, 228, 255); 
     */
 }
 
+.half-rd {
+    width: 35px;  
+}
+
+.full-rd {
+    width: 114px; 
+}
+
+.full-btn {
+    width: 150px; 
+}
 
 #view-area {
     left: 180px; 
@@ -120,7 +160,7 @@ body {
     height: 100%;
     margin: 0px 0px;
     padding: 0px 0px; 
-    background: black;
+    background: rgb(33, 39, 44);
     /*
     border: 1px solid rgb(100, 100, 100); 
     background: rgb(34, 0, 78);
@@ -156,17 +196,6 @@ body {
     pointer-events: none;
 }
 
-.half-rd {
-    width: 35px;  
-}
-
-.full-rd {
-    width: 114px; 
-}
-
-.full-btn {
-    width: 150px; 
-}
 
 /* 5. 바닥글 */
 #main-footer {
