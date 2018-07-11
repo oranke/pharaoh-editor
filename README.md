@@ -1,6 +1,6 @@
 # Pharaoh-editor
 
-[파라오 퍼즐 편집기](https://oranke.github.io/pharaoh-editor/)
+[파라오 퍼즐 편집기](https://oranke.github.io/pharaoh-editor/){target:_blank}
 
 WebGL / WebAssembly 지원 브라우저에서만 동작합니다. 
 
