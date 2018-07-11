@@ -1,4 +1,4 @@
-/*! jQuery UI - v1.12.1 - 2018-05-28
+/*! jQuery UI - v1.12.1 - 2018-07-11
 * http://jqueryui.com
 * Includes: widget.js, position.js, data.js, disable-selection.js, focusable.js, form-reset-mixin.js, jquery-1-7.js, keycode.js, labels.js, scroll-parent.js, tabbable.js, unique-id.js, widgets/draggable.js, widgets/droppable.js, widgets/resizable.js, widgets/selectable.js, widgets/sortable.js, widgets/accordion.js, widgets/autocomplete.js, widgets/button.js, widgets/checkboxradio.js, widgets/controlgroup.js, widgets/datepicker.js, widgets/dialog.js, widgets/menu.js, widgets/mouse.js, widgets/progressbar.js, widgets/selectmenu.js, widgets/slider.js, widgets/spinner.js, widgets/tabs.js, widgets/tooltip.js, effect.js, effects/effect-blind.js, effects/effect-bounce.js, effects/effect-clip.js, effects/effect-drop.js, effects/effect-explode.js, effects/effect-fade.js, effects/effect-fold.js, effects/effect-highlight.js, effects/effect-puff.js, effects/effect-pulsate.js, effects/effect-scale.js, effects/effect-shake.js, effects/effect-size.js, effects/effect-slide.js, effects/effect-transfer.js
 * Copyright jQuery Foundation and other contributors; Licensed MIT */
@@ -12018,7 +12018,7 @@ $.widget( "ui.dialog", {
 					event.preventDefault();
 					this.close( event );
 					return;
-				}	
+				}
 
 				// Prevent tabbing out of dialogs
 				if ( event.keyCode !== $.ui.keyCode.TAB || event.isDefaultPrevented() ) {
@@ -12505,7 +12505,6 @@ $.widget( "ui.dialog", {
 	},
 
 	_createOverlay: function() {
-		console.log('createoverlay ahahah')
 		if ( !this.options.modal ) {
 			return;
 		}
@@ -12518,7 +12517,6 @@ $.widget( "ui.dialog", {
 		} );
 
 		if ( !this.document.data( "ui-dialog-overlays" ) ) {
-			console.log('createoverlay ahahah2')
 
 			// Prevent use of anchors and inputs
 			// Using _on() for an event handler shared across many instances is
@@ -12526,12 +12524,6 @@ $.widget( "ui.dialog", {
 			this._on( this.document, {
 				focusin: function( event ) {
 					if ( isOpening ) {
-						return;
-					}
-					//console.log('dialog focusin')
-
-					// by oranke. 
-					if ( !this.options.modal ) {
 						return;
 					}
 
@@ -16805,7 +16797,7 @@ jQuery.cssHooks.borderColor = {
 	expand: function( value ) {
 		var expanded = {};
 
-		each( [ "Top", "Right", "Bottom", "Left" ], function( _i, part ) {
+		each( [ "Top", "Right", "Bottom", "Left" ], function( i, part ) {
 			expanded[ "border" + part + "Color" ] = value;
 		} );
 		return expanded;

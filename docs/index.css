@@ -128,7 +128,7 @@ body {
 }
 
 #buttons-area {
-    width: 170px; 
+    width: 130px; 
     height: 100%;
     margin: 0px, 0px;
     padding: 0px 5px; 
@@ -143,21 +143,21 @@ body {
 }
 
 .half-rd {
-    width: 35px;  
+    width: 20px;  
 }
 
 .full-rd {
-    width: 114px; 
+    width: 80px; 
 }
 
 .full-btn {
-    width: 150px; 
+    width: 114px; 
 }
 
 
 
 #view-area {
-    left: 180px; 
+    left: 140px; 
     right: 0px; 
     height: 100%;
     margin: 0px 0px;
