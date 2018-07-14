@@ -73,12 +73,23 @@ hr.seperator {
     border: 0px; 
 }
 
+
 /* 2. 페이지 구성 */
+
+html {
+    /*
+    padding-bottom: 400px;
+    */
+    background: rgb(33, 39, 44);
+}
+
 body {
     width: 960px; 
     /*height: 100vh; */
     margin: 0 auto; 
     background: rgb(33, 39, 44);
+    background-attachment: fixed;
+
 }
 #page-wrapper {
     background: #414B55; 
@@ -106,14 +117,26 @@ body {
     */
 }
 
+/*
 #main-header.h1 {
     font-size: 30px;
     color: white; 
 }
+*/
 
-#main-header.h2 {
+#main-header.p {
     font-size: 15px; font-weight: 500; 
+    text-align: center; 
     color: white;
+}
+
+#fullscr {
+    font-size: 5px;
+
+    /*
+    width: 10px;  
+    height: 10px;  
+    */
 }
 
 /* 4. 본문영역 */

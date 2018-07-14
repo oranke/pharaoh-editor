@@ -8,6 +8,13 @@
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#414B55">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#414B55">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#414B55">
 
     <!--
     <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -32,13 +39,11 @@
 <body>
     <div id="page-wrapper">
         <header id="main-header">
-             <!-- 여긴 헤더야!! 아하하!! -->
-            <hgroup>
-                <h2>Pharaoh puzzle editor</h2>
-                <!--
-                <h2 class="master-description">오랑캐꽃</h2>
-                -->
-            </hgroup>
+            <h2>
+                <button id="fullscr">Full screen</button> 
+                Pharaoh puzzle editor
+            </h2>
+            
         </header>
 
         <div id="main-content">
@@ -160,6 +165,7 @@
             }
             return false;
         };
+
         //console.log(supported() ? "WebAssembly is supported" : "WebAssembly is not supported");
         if (!supported()) {
             alert("WebAssembly is not supported");
@@ -167,24 +173,42 @@
 
         }
 
-        $(document).ready(function() {
+        // $(document).ready(function() {
+        //     setTimeout(function() {
+        //         window.scrollTo(0,100);
+        //     }, 10);
+        // });
 
-            if (navigator.userAgent.match(/Android/i)) {
-                window.scrollTo(0,0); // reset in case prev not scrolled  
-                var nPageH = $(document).height();
-                var nViewH = window.outerHeight;
-                if (nViewH > nPageH) {
-                    nViewH -= 250;
-                    $('BODY').css('height',nViewH + 'px');
-                }
-                window.scrollTo(0,1);
-            }
-
-        });
         // UI 제어 부분.
 
 
         //$( function() {
+
+            // https://developers.google.com/web/fundamentals/native-hardware/fullscreen/
+            function toggleFullScreen() {
+                var doc = window.document;
+                var docEl = doc.documentElement;
+
+                var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+                var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+                if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                    requestFullScreen.call(docEl);
+                }
+                else {
+                    cancelFullScreen.call(doc);
+                }
+            }
+
+            // 풀스크린 버튼 초기화
+            $("#fullscr").button({
+                icon: "ui-icon-arrowthick-2-ne-sw",
+                showLabel: false
+            })
+            .click(function () {
+                toggleFullScreen();
+            });
+
             // 라디오버튼 초기화
             //$("input").checkboxradio({
             $(".rb").checkboxradio({                
