@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <!-- Chrome, Firefox OS and Opera -->
@@ -19,11 +20,11 @@
     <!--
     <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     -->
-    <!-- 항상 리로딩되도록 강제 
+    <!-- 항상 리로딩되도록 강제 -->
     <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0" />
     <meta http-equiv="cache-control" content="max-age=0" />
     <meta http-equiv="expires" content="0" />
-    -->
+    
 
     <link rel="stylesheet" type="text/css" media="screen" href="jquery-ui/jquery-ui.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="index.css" />
@@ -83,8 +84,11 @@
                 <button id="findfar" class="full-btn">Most far</button> <br>
 
                 <hr class="seperator">
+
+                <!--
                 <button id="test" class="full-btn">Test</button>
                 <hr class="seperator">
+                -->
                 
             </div>
 
@@ -191,6 +195,11 @@
 
                 var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
                 var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+                if ((!requestFullScreen) || (!cancelFullScreen)) {
+                    alert('Full screen is not supported!!')
+                    return; 
+                } 
 
                 if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
                     requestFullScreen.call(docEl);
@@ -350,9 +359,25 @@
             // 가장 먼 거리 찾기 
             $("#findfar").button().click(function () {
                 $(".ui-dialog-titlebar").hide();
-                $("#popup-message").text('Not yet...');
-                popup_funcs.onShow = null; 
-                popup_funcs.onClose = null; 
+                $("#popup-message").text('Let me guess...');
+
+                // 팝업 표시 후 처리
+                popup_funcs.onShow = function () {
+                    var ret = Module.proc_MostFar(); 
+                    if (ret) {
+                        var startSteps = Module.proc_MostFarValue(0); 
+                        var finalSteps = Module.proc_MostFarValue(1); 
+                        $("#lbl-moves").html('steps ' + startSteps + ' >> ' + finalSteps);
+                        setTimeout(function() {
+                            Module.testQuaker();
+                        }, 100);
+                    }
+
+                }; 
+
+                // 팝업 종료 후 처리
+                popup_funcs.onClose = null;
+
                 $("#popup-dialog").dialog('open'); 
             })
 
@@ -477,7 +502,7 @@
             $("#test").button().click(function() {
                 //alert ('test');
                 //document.getElementById('canvas').setAttribute("style","width:600px");
-                Module.testQuaker();
+                //Module.testQuaker();
                 //console.log(Module.export_Blocks());
                 //Module.testFunc("hahaha");
 
