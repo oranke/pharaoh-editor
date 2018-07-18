@@ -352,6 +352,9 @@
                 } else {
                     $("#full-overay-panel").addClass('hidden');
                     Module.setStatus('');
+
+                    // "Move" 상태로. 
+                    $("#rd-play").trigger('click');
                 }
             }
 
@@ -394,11 +397,14 @@
                         var startSteps = Module.proc_MostFarValue(0); 
                         var finalSteps = Module.proc_MostFarValue(1); 
                         $("#lbl-moves").html('steps ' + startSteps + ' >> ' + finalSteps);
+                    } else {
                         setTimeout(function() {
                             Module.testQuaker();
                         }, 100);
                     }
 
+                    // "Move" 상태로. 
+                    $("#rd-play").trigger('click');
                 }; 
 
                 // 팝업 종료 후 처리
@@ -412,6 +418,12 @@
                 autoOpen: false,
                 modal: true,
                 width: 500,
+
+                close: function(event, ui) {
+                    // "Move" 상태로. 
+                    $("#rd-play").trigger('click');
+                },
+
                 buttons: {
                     copy : function() {
                         // 참고: https://codepen.io/shaikmaqsood/pen/XmydxJ
@@ -497,6 +509,11 @@
                 autoOpen: false,
                 modal: true,
                 width:500,
+
+                close: function(event, ui) {
+                    // "Move" 상태로. 
+                    $("#rd-play").trigger('click');
+                },
 
                 buttons: {
                     ok: function() {
