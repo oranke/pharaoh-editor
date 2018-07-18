@@ -156,6 +156,30 @@
     <script src="jquery-ui/jquery-ui.min.js"></script>
 
     <script type='text/javascript'>
+        // webGL 체크
+        // https://developer.mozilla.org/en-US/docs/Learn/WebGL/By_example/Detect_WebGL
+        const webGLSupported = function () {
+            try {
+                //var canvas = document.createElement("canvas");
+                var canvas = document.getElementById('canvas');
+                var gl = 
+                    canvas.getContext("webgl") ||
+                    canvas.getContext("experimental-webgl");
+                if (gl && gl instanceof WebGLRenderingContext) {
+                    return true; 
+                }
+            } catch (e) {
+            }
+            return false;
+        }
+
+        //console.log(webGLSupported() ? "webGL is supported" : "webGL is not supported");
+        if (!webGLSupported()) {
+            alert("webGL is not supported");
+            //window.history.go(-1);
+            window.location.href="about:blank";
+        }
+
         // wasm 체크. 
         const wasmSupported = function() {
             try {
@@ -170,12 +194,13 @@
             return false;
         };
 
-        //console.log(supported() ? "WebAssembly is supported" : "WebAssembly is not supported");
+        //console.log(wasmSupported() ? "WebAssembly is supported" : "WebAssembly is not supported");
         if (!wasmSupported()) {
             alert("WebAssembly is not supported");
-            window.history.go(-1);
-
+            //window.history.go(-1);
+            window.location.href="about:blank";
         }
+
 
         // $(document).ready(function() {
         //     setTimeout(function() {
