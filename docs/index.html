@@ -57,7 +57,7 @@
                 -->
                 <hr class="seperator">
 
-                <label for="rd-play" class="full-rd">Play</label> 
+                <label for="rd-play" class="full-rd">Move</label> 
                 <input class="rb" type="radio" name="plate-work" id="rd-play"> <br>
 
                 <label for="rd-PH" class="half-rd">PH</label> 
@@ -157,7 +157,7 @@
 
     <script type='text/javascript'>
         // wasm 체크. 
-        const supported = function() {
+        const wasmSupported = function() {
             try {
                 if (typeof WebAssembly === "object"
                     && typeof WebAssembly.instantiate === "function") {
@@ -171,7 +171,7 @@
         };
 
         //console.log(supported() ? "WebAssembly is supported" : "WebAssembly is not supported");
-        if (!supported()) {
+        if (!wasmSupported()) {
             alert("WebAssembly is not supported");
             window.history.go(-1);
 
@@ -196,6 +196,7 @@
                 var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
                 var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
 
+                // iOS's safari. 
                 if ((!requestFullScreen) || (!cancelFullScreen)) {
                     alert('Full screen is not supported!!')
                     return; 
@@ -259,7 +260,7 @@
                 //console.log('ahaha')
             });
 
-            // play 버튼은 누른 채 시작. 
+            // 시작시 Move 버튼은 눌린 상태로.
             // https://stackoverflow.com/questions/3759088/jquery-ui-radio-button-how-to-correctly-switch-checked-state
             $("#rd-play").prop('checked', true).button("refresh");
 
@@ -412,9 +413,10 @@
                 $("#export-dialog").dialog('open');
             }); 
 
-            function convert_import () {
-                var c = $("#import-text").val().split(',');
-                var arr = []; 
+            function proc_Import(blockString) {
+                // 문자열을 ','로 쪼개 blocks 배열에 담기. 
+                var c = blockString.split(',');
+                var blocks = []; 
 
                 for (i=0; i< c.length; i++) {
                     var s = c[i].split('-');
@@ -440,15 +442,12 @@
                             break; 
                     }
                     //console.log(item);
-                    arr.push(item);
+                    blocks.push(item);
                 }
 
-                return arr; 
-            }
-
-            function proc_import(blocks) {
                 if (blocks.length == 0) return; 
 
+                // 게임판 초기화
                 Module.clear_Blocks();
 
                 // 첫번째 정보가 주인공 파라오인지 살핀다. 
@@ -477,10 +476,7 @@
                 buttons: {
                     ok: function() {
                         $(this).dialog('close');
-                        //console.log($("#import-text").val())
-                        var blockdata = convert_import(); 
-                        console.log(blockdata); 
-                        proc_import(blockdata); 
+                        proc_Import($("#import-text").val());
                     },
                     cancel: function(){
                         $(this).dialog('close');
@@ -505,9 +501,6 @@
                 //Module.testQuaker();
                 //console.log(Module.export_Blocks());
                 //Module.testFunc("hahaha");
-
-
-
             });
 
             // 레벨 완료시 동작
