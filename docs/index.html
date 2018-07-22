@@ -338,6 +338,7 @@
 
                 close: function(event, ui) {
                     if (popup_funcs.onClose) popup_funcs.onClose(); 
+
                 }
 
             });            
@@ -345,16 +346,13 @@
             function doSolveMove() {
                 if (Module.proc_Count() > 1) {
                     Module.proc_Move(); 
-                    Module.setStatus('Step to final ' + Module.proc_Count());
+                    Module.setStatus('Steps to goal ' + Module.proc_Count());
 
                     setTimeout(doSolveMove, 500);
 
                 } else {
                     $("#full-overay-panel").addClass('hidden');
                     Module.setStatus('');
-
-                    // "Move" 상태로. 
-                    $("#rd-play").trigger('click');
                 }
             }
 
@@ -371,12 +369,23 @@
                     // 화면 전체 블럭. 
                     $("#full-overay-panel").removeClass('hidden');
                     $("#full-overay-panel").focus()
+
+                    // 솔루션이 없으면 화면 흔들기
+                    if (!ret) {
+                        $("#lbl-moves").html('No solutions!!')
+                        Module.testQuaker();
+                    }
+                    // "Move" 상태로. 
+                    $("#rd-play").trigger('click');
+
                 }
 
                 // 팝업 종료 후 처리
                 popup_funcs.onClose = function () {
-                    // 닫히고 100ms 후에 이동 시작. 
+
+                    // 닫히고 100ms 후에 이동, 또는 화면 정리 시작. 
                     setTimeout(function() {
+
                         doSolveMove();
                     }, 100);
 
@@ -396,8 +405,9 @@
                     if (ret) {
                         var startSteps = Module.proc_MostFarValue(0); 
                         var finalSteps = Module.proc_MostFarValue(1); 
-                        $("#lbl-moves").html('steps ' + startSteps + ' >> ' + finalSteps);
+                        $("#lbl-moves").html('steps ' + startSteps + ' ->> ' + finalSteps);
                     } else {
+                        $("#lbl-moves").html('No solutions!!')
                         setTimeout(function() {
                             Module.testQuaker();
                         }, 100);
