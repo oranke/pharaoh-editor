@@ -5,18 +5,18 @@ const readline = require('readline');
 const B_NIL =   0
 // 방해용, 관들의 코드..
 const B_H21 =   11
-// const B_H22 =   12
+const B_H22 =   12
 const B_V21 =   21
-// const B_V22 =   22
+const B_V22 =   22
 const B_H31 =   31
-// const B_H32 =   32
-// const B_H33 =   33
+const B_H32 =   32
+const B_H33 =   33
 const B_V31 =   41
-// const B_V32 =   42
-// const B_V33 =   43
+const B_V32 =   42
+const B_V33 =   43
 // 파라오용 관의 코드..
 const B_PH1 =   51
-// const B_PH2 =   52
+const B_PH2 =   52
 
 
 // http://www.cs.yorku.ca/~oz/hash.html 의 sdbm 방식.
@@ -37,12 +37,37 @@ function toPaddedHexString(num, len) {
     return "0".repeat(len - str.length) + str;
 }
 
-function printPlate(plate) {
-    console.log('--------')
+function blockCodeToStr(blockCode) {
+    switch (blockCode) {
+        case B_NIL: return 'B_NIL';
+        case B_H21: return 'B_H21'; 
+        case B_H22: return 'B_H22'; 
+        case B_V21: return 'B_V21'; 
+        case B_V22: return 'B_V22'; 
+        case B_H31: return 'B_H31'; 
+        case B_H32: return 'B_H32'; 
+        case B_H33: return 'B_H33'; 
+        case B_V31: return 'B_V31'; 
+        case B_V32: return 'B_V32'; 
+        case B_V33: return 'B_V33'; 
+        case B_PH1: return 'B_PH1'; 
+        case B_PH2: return 'B_PH2'; 
+        
+        default: return blockCode;
+    }
+
+}
+
+function printPlate(plate, byConst = false) {
     for (let j=0; j<6; j++) {
-        for (let i=(j*6); i<(j+1)*6; i++)
-            //console.log(i); 
-            process.stdout.write(plate[i] + ', ');
+        process.stdout.write('\t');
+
+        for (let i=(j*6); i<(j+1)*6; i++) {
+            if (byConst) 
+                process.stdout.write(blockCodeToStr(plate[i]) + ', ');
+            else
+                process.stdout.write(plate[i] + ', ');
+        }
         process.stdout.write('\n');
     }
 }
@@ -116,26 +141,10 @@ function blockStrToBuffer(blockStr) {
     //console.log(plate[0]);
 
     for (let i=0; i<blocks.length; i++) {
-        //console.log(i + ' insert : ' + blocks[i].pos + ', ' + blocks[i].type + ', ' + blocks[i].len)
         insertBlock(plate, blocks[i].pos, blocks[i].type, blocks[i].len);
-        //printPlate(plate); 
-        //console.log('----')
-
     }
 
-
-
-     /*
-    //console.log(blocks.length);
-    console.log(blockStr); 
-    //console.log(plate); 
-    printPlate(plate); 
-    console.log(memHash3(buffer)); 
-    console.log('0x'+toPaddedHexString(memHash3(buffer), 8)); 
-    // */
     return buffer; 
-
-    //console.log(blocks); 
 }
 
 /*
@@ -152,17 +161,10 @@ function proc_RecvData(data) {
 
         //blockStrToBuffer(blockStr); 
     }
-
-
-
 }
 
+// 스프레드쉬트에서 정보 얻어와 처리
 async function main() {
-    //console.log(https)
-    
-    //blockStrToBuffer('12-0-2,1-0-2,21-0-2,3-0-3,23-1-2,10-1-2,30-0-2,0-1-2,19-0-2,26-0-3,11-1-2,7-0-3');
-    //return; 
-
     https.get(
         'https://spreadsheets.google.com/feeds/list/1cawMOn9bv5H9jEfQCXY7IcvR_04F1D82I_gAhaMQeG8/od6/public/values?alt=json',
         async (res) => {
@@ -185,24 +187,30 @@ async function main() {
         console.error(e);
     });
 
-    //console.log(data); 
-    //console.log('finish');
-
 }
 */
 
 function main() {
     var rd = readline.createInterface({
         input: fs.createReadStream('./input.txt'),
-        output: process.stdout,
+        //output: process.stdout,
         console: false
     });
     
     rd.on('line', function(line) {
-        //console.log(line);
-        let buffer = blockStrToBuffer(line); 
-        //console.log(memHash3(buffer)), 
-        console.log('0x'+toPaddedHexString(memHash3(buffer), 8)); 
+        let val = line.split('\t');
+        if (val.length > 1) {
+            let buffer = blockStrToBuffer(val[1]); 
+            console.log(`// ${val[0]}`);
+            console.log('{{');
+            printPlate(new Uint8Array(buffer), true);
+            console.log('}},\n');
+
+        } else {
+            let buffer = blockStrToBuffer(line); 
+            //console.log(memHash3(buffer)), 
+            console.log('0x'+toPaddedHexString(memHash3(buffer), 8)); 
+        }
 
     });
 }
