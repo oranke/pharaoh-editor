@@ -456,7 +456,8 @@
             // 출력 버튼 클릭
             $("#export").button().click(function() {
                 $(".ui-dialog-titlebar").show();
-                $("#export-text").val(Module.export_Blocks());
+                //$("#export-text").val(Module.export_Blocks());
+                $("#export-text").val(Module.export_toString());
                 $("#export-dialog").dialog('open');
             }); 
 
@@ -528,7 +529,8 @@
                 buttons: {
                     ok: function() {
                         $(this).dialog('close');
-                        proc_Import($("#import-text").val());
+                        Module.import_fromString($("#import-text").val());
+                        //proc_Import($("#import-text").val());
                     },
                     cancel: function(){
                         $(this).dialog('close');
